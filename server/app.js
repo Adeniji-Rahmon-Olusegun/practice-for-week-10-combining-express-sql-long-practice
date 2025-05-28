@@ -8,9 +8,18 @@ require('dotenv').config();
 // Express using json
 app.use(express.json());
 
+app.use((req, res, next) => {
+    res.on('finish', () => {
+        console.log(`${req.method} ${req.originalUrl} -- ${res.statusCode}`);
+    });
+
+    next();
+});
+
 // Connect router for trees API
 const treesRouter = require('./routes/trees');
 app.use('/trees', treesRouter);
+
 
 // Root route
 app.get('/', (req, res) => {
